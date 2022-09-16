@@ -11,10 +11,21 @@ server:
 
 eureka:
   instance:
-    hostname: localhost
+#    hostname: localhost
     prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  server:
+    responseCacheUpdateIntervalMs: 3000
+    responseCacheAutoExpirationInSeconds: 180
+    eviction-interval-timer-in-ms: 3000
+    enable-self-preservation: false
   client:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://admin:123456@127.0.0.1:8000/eureka/
+
+logging:
+  level:
+    com.netflix.eureka.registry: warn
