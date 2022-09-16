@@ -12,6 +12,7 @@
     <modules>
         <module>cloud-eureka</module>
         <module>producer-service</module>
+        <module>cloud-gateway</module>
     </modules>
 
     <parent>
@@ -24,6 +25,7 @@
         <java.version>17</java.version>
         <spring.boot.version>2.6.3</spring.boot.version>
         <spring.cloud.version>2021.0.1</spring.cloud.version>
+        <spring.cloud.alibaba.version>2021.0.1.0</spring.cloud.alibaba.version>
     </properties>
 
     <dependencyManagement>

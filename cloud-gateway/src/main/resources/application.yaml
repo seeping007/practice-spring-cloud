@@ -1,0 +1,162 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+  application:
+    name: cloud-gateway
+  codec:
+    max-in-memory-size: 20971520 # 20M
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    database: 1
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    nacos:
+      config:
+        enabled: true
+        server-addr: 127.0.0.1:8848
+        namespace:
+        username:
+        password:
+        refresh-enabled: true
+      discovery:
+        enabled: true
+        server-addr: 127.0.0.1:8848
+        namespace:
+        username:
+        password:
+        register-enabled: true
+    sentinel:
+      enabled: false
+      transport:
+        dashboard: http://127.0.0.1:18080
+        port: 8719
+      filter:
+        enabled: false
+      scg:
+        fallback:
+          mode: response
+          response-status: 429
+          response-body: '{"error":{"type":"TOO_MANY_REQUESTS","message":"Too many requests"}}'
+  config:
+    import:
+      - optional:nacos:cloud-gateway.yaml
+      - optional:nacos:cloud-gateway-route-config.yaml
+      - optional:nacos:cloud-gateway-sentinel.yaml
+  cloud.gateway:
+    predicate:
+      weight:
+        enabled: false # 没关掉启动会阻塞住（待观察）
+    metrics:
+      enabled: true
+    httpclient:
+      connect-timeout: 5000
+      response-timeout: 15000
+      pool:
+        type: FIXED
+        max-connections: 5000
+        max-idle-time: 3000
+    globalcors:
+      corsConfigurations:
+        '[/**]':
+          allowCredentials: false
+          allowedOrigins: "*"
+          allowedHeaders: "*"
+          allowedMethods: "*"
+      default-filters:
+        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+    routes:
+      - id: producer-service
+        uri: lb://producer-service
+        predicates:
+          - Path=/api/producer-service/**
+        filters:
+          - StripPrefix=2
+
+logging:
+  config: classpath:log4j2.xml
+  level:
+    org.springframework.cloud.gateway: info
+    org.springframework.http.server.reactive: info
+    org.springframework.web.reactive: info
+    org.springframework.boot.autoconfigure.web: info
+    reactor.netty: info
+    com.alibaba.nacos: warn
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - gateway
+          - metrics
+
+# eureka
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://admin:123456@127.0.0.1:8000/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 5
+
+# feign
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 10000
+        loggerLevel: basic # basic,full
+  httpclient:
+    enabled: true
+    max-connections: 5000
+    max-connections-per-route: 2000
+    connection-timeout: 5000
+    #disable-ssl-validation: true
+
+# 自定义路由配置
+custom-route-config:
+  dynamicUpdateEnabled: false
+  excludedRouteIdPrefix: ReactiveCompositeDiscoveryClient
+  nacosDataId: cloud-gateway-route-config.yaml
+  nacosGroup: DEFAULT_GROUP
+  nacosServerAddr: ${spring.cloud.nacos.config.server-addr}
+  nacosNamespace: ${spring.cloud.nacos.config.namespace}
+  nacosUsername: ${spring.cloud.nacos.config.username}
+  nacosPassword: ${spring.cloud.nacos.config.password}
+
+# reactive feign config
+react-feign:
+  connectTimeout: 5000
+  writeTimeout: 10000
+  readTimeout: 10000
+
+# resilience4j config
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: TIME_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50.0
+        automatic-transition-from-open-to-half-open-enabled: true
+        permittedNumberOfCallsInHalfOpenState: 10
+        waitDurationInOpenState: 5s
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 5s
+
+
