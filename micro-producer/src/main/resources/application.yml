@@ -1,9 +1,9 @@
 spring:
   application:
-    name: producer-service
+    name: micro-producer
 
 server:
-  port: 8001
+  port: 8002
 
 eureka:
   client:
