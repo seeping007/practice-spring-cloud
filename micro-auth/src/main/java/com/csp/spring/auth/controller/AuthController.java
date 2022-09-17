@@ -2,6 +2,7 @@ package com.csp.spring.auth.controller;
 
 import com.csp.spring.auth.config.AppConfig;
 import com.csp.spring.auth.config.AppInfoConfig;
+import com.csp.spring.auth.model.CustomResponse;
 import com.csp.spring.auth.model.OpenApiAuthReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +26,14 @@ public class AuthController {
     @PostMapping("/openapi/auth")
     public ResponseEntity<Object> authOpenApi(@RequestBody OpenApiAuthReq req) {
 
+        CustomResponse response = CustomResponse.builder()
+                .status("SUCCESS").build();
+
         AppConfig appConfig = appInfoConfig.getAppConfig(req.getAppKey());
         if (appConfig == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+            response.setStatus("UNAUTHORIZED");
         }
 
-        return ResponseEntity.ok("Hello");
+        return ResponseEntity.ok(response);
     }
 }
