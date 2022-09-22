@@ -50,7 +50,7 @@ nacos:
       ephemeral: true # 是否为临时实例（缺省为true）
 
 main-config:
-  desc: main config
+  desc: default main
 
 ext-config:
-  desc: ext config
+  desc: default ext
