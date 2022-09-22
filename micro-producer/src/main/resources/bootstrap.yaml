@@ -1,0 +1,26 @@
+nacos:
+  config:
+    enabled: true
+    bootstrap:
+      enable: true
+      log-enable: true
+    max-retry: 5
+    auto-refresh: true
+    remote-first: true
+    type: yaml
+    data-id: micro-producer.yaml
+    server-addr: 127.0.0.1:8848
+    namespace: dev
+    group: DEFAULT_GROUP
+    username: nacos
+    password: nacos
+  discovery:
+    auto-register: true
+    server-addr: 127.0.0.1:8848
+    namespace: dev
+    username: nacos
+    password: nacos
+    register:
+      enabled: true
+      group-name: DEFAULT_GROUP
+      ephemeral: true # 是否为临时实例（缺省为true）
