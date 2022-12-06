@@ -16,4 +16,6 @@ import org.springframework.context.annotation.Configuration;
 public class MainConfig {
 
     private String desc;
+
+    private String helloPass;
 }

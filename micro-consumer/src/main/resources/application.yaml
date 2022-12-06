@@ -1,0 +1,103 @@
+spring:
+  application:
+    name: micro-consumer
+#  config:
+#    import:
+#      - optional:nacos:micro-producer.yaml
+#      - optional:nacos:micro-producer-ext-config.yaml
+
+server:
+  port: 8003
+
+logging:
+  config: classpath:log4j2.xml
+  level:
+    com.alibaba.nacos: info
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://admin:123456@127.0.0.1:8000/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+nacos:
+  config:
+    enabled: true
+    bootstrap:
+      enable: true
+      log-enable: true
+    max-retry: 5
+    auto-refresh: true
+    remote-first: true
+    type: yaml
+    data-id: micro-consumer.yaml
+    server-addr: 127.0.0.1:8848
+    namespace: dev
+    group: DEFAULT_GROUP
+    username: nacos
+    password: nacos
+  discovery:
+    auto-register: true
+    server-addr: 127.0.0.1:8848
+    namespace: dev
+    username: nacos
+    password: nacos
+    register:
+      enabled: true
+      group-name: DEFAULT_GROUP
+      ephemeral: true # 是否为临时实例（缺省为true）
+
+# feign
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 5000
+        loggerLevel: basic
+  httpclient:
+    enabled: true
+    max-connections: 100
+    max-connections-per-route: 50
+    connection-timeout: 3000
+  circuitbreaker:
+    enabled: true
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        # 滑动窗口类型（TIME_BASED / COUNT_BASED）
+        slidingWindowType: TIME_BASED
+        # 窗口大小
+        slidingWindowSize: 10
+        # 在单位时间窗口内最少需要几次调用才开始进行统计计算
+        minimumNumberOfCalls: 1
+        # 在单位时间窗口内调用失败率达到多少后会启动断路器
+        failureRateThreshold: 50.0
+        # 允许断路器自动由打开状态转换为半开状态
+        automatic-transition-from-open-to-half-open-enabled: true
+        # 在半开状态下允许进行正常调用的次数
+        permittedNumberOfCallsInHalfOpenState: 10
+        # 断路器打开状态转换为半开状态需要的等待时长
+        waitDurationInOpenState: 5s
+        # 不纳入计算的异常
+        ignore-exceptions:
+          - com.csp.spring.web.exception.FeignBusinessException
+  timelimiter:
+    configs:
+      default:
+        # 超时时间
+        timeout-duration: 5s
+
+remote-service:
+  micro-producer:
+    baseUrl: http://127.0.0.1:8002
+
+main-config:
+  desc: default main
+
+ext-config:
+  desc: default ext

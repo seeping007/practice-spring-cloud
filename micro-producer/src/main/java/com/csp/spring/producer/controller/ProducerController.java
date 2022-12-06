@@ -4,6 +4,7 @@ import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.csp.spring.producer.config.ExtConfig;
 import com.csp.spring.producer.config.MainConfig;
 import com.csp.spring.producer.model.HelloVO;
+import com.csp.spring.web.exception.ParamInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,10 @@ public class ProducerController {
     @GetMapping("/hello")
     @ResponseStatus(code = HttpStatus.OK)
     public Object hello(@RequestParam String name) {
+
+        if (!name.equals(mainConfig.getHelloPass())) {
+            throw new ParamInvalidException("Invalid hello name");
+        }
 
         HelloVO helloVO = HelloVO.builder()
                 .name(name).timestamp(System.currentTimeMillis())
