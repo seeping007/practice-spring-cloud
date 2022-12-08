@@ -28,6 +28,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.validation.ValidationException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Global exception handler
@@ -41,8 +42,12 @@ public class GlobalExceptionHandler {
 
     private final GlobalExceptionTranslator translator;
 
-    public GlobalExceptionHandler(GlobalExceptionTranslator translator) {
+    private final List<CustomExceptionHandler> customExceptionHandlers;
+
+    public GlobalExceptionHandler(GlobalExceptionTranslator translator,
+                                  List<CustomExceptionHandler> customExceptionHandlers) {
         this.translator = translator;
+        this.customExceptionHandlers = customExceptionHandlers;
     }
 
     private void logException(String message, Exception e, boolean isError) {
@@ -57,6 +62,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Object error(Exception e) {
+
+        if (customExceptionHandlers != null) {
+            for (CustomExceptionHandler customExceptionHandler : customExceptionHandlers) {
+                final CustomExceptionHandler.ErrorModel errorModel = customExceptionHandler.handle(e);
+                if (null != errorModel) {
+                    return ResponseEntity.status(errorModel.getStatus())
+                            .body(translator.translate(errorModel.getType(), errorModel.getMessage()));
+                }
+            }
+        }
+
         log.error("Internal Server Error: ", e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())

@@ -2,8 +2,8 @@ package com.csp.spring.consumer.remote;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.csp.spring.web.exception.BusinessException;
 import com.csp.spring.web.exception.FeignBusinessException;
+import com.csp.spring.web.exception.RemoteException;
 import com.csp.spring.web.model.CustomResponse;
 import com.csp.spring.web.model.ErrorModel;
 import com.csp.spring.web.model.ErrorResponse;
@@ -14,6 +14,7 @@ import feign.codec.ErrorDecoder;
 import feign.form.spring.SpringFormEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +43,7 @@ public class CustomFeignConfiguration {
     }
 
     /**
-     * 被调用方的业务异常（非200），直接上抛由上层处理，不进入熔断
+     * 被调用方的业务异常（非200），上抛处理（不进入熔断）
      */
     static class UserErrorDecoder implements ErrorDecoder {
 
@@ -71,8 +72,14 @@ public class CustomFeignConfiguration {
                         response.status(), resp.getStatus(), resp.getMessage());
             } else {
                 log.error("[feign] error body: {}", responseStr);
-                throw new BusinessException("REMOTE_ERROR", "Unknown feign error body");
+                throw new RemoteException("Unknown feign error body");
             }
         }
+    }
+
+    @Bean
+    @ConditionalOnClass(DefaultFeignFallbackFactory.class)
+    public <T> DefaultFeignFallbackFactory<T> defaultFeignFallbackFactory() {
+        return new DefaultFeignFallbackFactory<>();
     }
 }

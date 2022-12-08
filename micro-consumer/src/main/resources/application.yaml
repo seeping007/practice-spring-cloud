@@ -83,7 +83,7 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 10
         # 断路器打开状态转换为半开状态需要的等待时长
         waitDurationInOpenState: 5s
-        # 不纳入计算的异常
+        # 不纳入熔断计算的异常
         ignore-exceptions:
           - com.csp.spring.web.exception.FeignBusinessException
   timelimiter:

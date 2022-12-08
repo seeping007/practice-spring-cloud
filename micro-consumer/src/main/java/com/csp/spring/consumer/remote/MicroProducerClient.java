@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @since 2022-12-06
  */
 @FeignClient(name = "micro-producer", url = "${remote-service.micro-producer.baseUrl}", // url: 有则使用，没有则使用name
-        fallbackFactory = MicroProducerClientFallbackFactory.class,
+        fallbackFactory = DefaultFeignFallbackFactory.class,
         configuration = CustomFeignConfiguration.class)
 public interface MicroProducerClient {
 

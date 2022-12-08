@@ -1,10 +1,13 @@
 package com.csp.spring.web;
 
+import com.csp.spring.web.handler.CustomExceptionHandler;
 import com.csp.spring.web.handler.GlobalExceptionHandler;
 import com.csp.spring.web.handler.GlobalExceptionTranslator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * @author chensiping
@@ -27,7 +30,8 @@ public class ExceptionHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(GlobalExceptionHandler.class)
-    public GlobalExceptionHandler globalExceptionHandler(GlobalExceptionTranslator globalExceptionTranslator) {
-        return new GlobalExceptionHandler(globalExceptionTranslator);
+    public GlobalExceptionHandler globalExceptionHandler(GlobalExceptionTranslator globalExceptionTranslator,
+                                                         List<CustomExceptionHandler> customExceptionHandlers) {
+        return new GlobalExceptionHandler(globalExceptionTranslator, customExceptionHandlers);
     }
 }
