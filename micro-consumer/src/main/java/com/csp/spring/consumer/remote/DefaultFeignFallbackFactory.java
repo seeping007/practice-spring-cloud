@@ -14,7 +14,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 @Slf4j
 public class DefaultFeignFallbackFactory<T> implements FallbackFactory<T> {
 
-    // 若开启了circuitbreaker（feign.circuitbreaker.enabled=true），出现异常或断路器开启都会进入fallback
+    // 若开启了circuitbreaker（feign.circuitbreaker.enabled=true），出现异常或触发熔断都会进入fallback
     @SneakyThrows
     @Override
     public T create(Throwable cause) {
@@ -25,7 +25,7 @@ public class DefaultFeignFallbackFactory<T> implements FallbackFactory<T> {
         }
 
         // 默认降级处理（抛503）
-        log.error("Fallback cause: {}", cause.getMessage());
+        log.error("Fallback cause: {}, {}", cause.getClass().getSimpleName(), cause.getMessage());
         throw new RemoteException(503, "REMOTE_FALLBACK", "Service not available");
     }
 }

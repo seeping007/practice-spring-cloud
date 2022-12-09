@@ -5,6 +5,14 @@ spring:
 #    import:
 #      - optional:nacos:micro-producer.yaml
 #      - optional:nacos:micro-producer-ext-config.yaml
+  cloud:
+    sentinel:
+      enabled: true
+      transport:
+        dashboard: http://127.0.0.1:18080
+        port: 8719
+      filter:
+        enabled: false
 
 server:
   port: 8003
@@ -64,6 +72,8 @@ feign:
     connection-timeout: 3000
   circuitbreaker:
     enabled: true
+  sentinel:
+    enabled: false
 
 resilience4j:
   circuitbreaker:

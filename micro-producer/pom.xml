@@ -68,6 +68,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
+        </dependency>
 
         <!-- nacos -->
         <dependency>
@@ -75,11 +80,11 @@
             <artifactId>nacos-config-spring-boot-starter</artifactId>
             <version>${spring.boot.nacos.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba.boot</groupId>
-            <artifactId>nacos-discovery-spring-boot-starter</artifactId>
-            <version>${spring.boot.nacos.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.boot</groupId>-->
+<!--            <artifactId>nacos-discovery-spring-boot-starter</artifactId>-->
+<!--            <version>${spring.boot.nacos.version}</version>-->
+<!--        </dependency>-->
 
         <!-- spring-cloud-loadbalancer -->
         <dependency>

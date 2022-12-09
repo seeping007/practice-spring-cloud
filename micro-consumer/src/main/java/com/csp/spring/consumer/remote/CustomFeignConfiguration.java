@@ -3,7 +3,6 @@ package com.csp.spring.consumer.remote;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.csp.spring.web.exception.FeignBusinessException;
-import com.csp.spring.web.exception.RemoteException;
 import com.csp.spring.web.model.CustomResponse;
 import com.csp.spring.web.model.ErrorModel;
 import com.csp.spring.web.model.ErrorResponse;
@@ -72,7 +71,7 @@ public class CustomFeignConfiguration {
                         response.status(), resp.getStatus(), resp.getMessage());
             } else {
                 log.error("[feign] error body: {}", responseStr);
-                throw new RemoteException("Unknown feign error body");
+                throw new FeignBusinessException(response.status(), "REMOTE_ERROR", "Unknown feign error body");
             }
         }
     }
