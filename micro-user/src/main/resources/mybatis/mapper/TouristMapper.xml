@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csp.cloud.user.mapper.TouristMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.csp.cloud.user.model.entity.Tourist">
+        <id column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="user_id" property="userId" />
+        <result column="tourist_id" property="touristId" />
+        <result column="nickname" property="nickname" />
+        <result column="origin_app" property="originApp" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, app_key, user_id, tourist_id, nickname, origin_app, tenant_id, created_time, updated_time
+    </sql>
+
+</mapper>

@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: @project.artifactId@
+  profiles:
+    active: @profile.active@
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
+  config:
+    import:
+      - optional:classpath:application-${spring.profiles.active}.yaml
+      - optional:nacos:@project.artifactId@.yaml
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+#    nacos:
+#      discovery:
+#        enabled: true
+#        server-addr: 10.112.61.86:8848
+#        namespace: public
+#        username: dev
+#        register-enabled: true
+#      config:
+#        enabled: true
+#        server-addr: 10.112.61.86:8848
+#        namespace: public
+#        username: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/micro_user?serverTimezone=UTC&characterEncoding=utf8&&allowMultiQueries=true
+    username: root
+    password: 66666@csp
+    druid:
+      initial-size: 20
+      max-active: 100
+      min-idle: 5
+      max-wait: 60000
+      filters: stat
+      connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+
+server:
+  port: 10000
+
+mybatis-plus:
+  type-aliases-package: com.csp.cloud.user.model.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  ignoreTenantTables:
+#    - "tourist"

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.csp.spring</groupId>
-    <artifactId>spring-cloud-practice</artifactId>
+    <artifactId>practice-spring-cloud</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
@@ -16,6 +16,7 @@
         <module>micro-producer</module>
         <module>micro-consumer</module>
         <module>cloud-web</module>
+        <module>micro-user</module>
     </modules>
 
     <parent>
