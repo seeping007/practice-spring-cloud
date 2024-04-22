@@ -51,5 +51,5 @@ mybatis-plus:
   type-aliases-package: com.csp.cloud.user.model.entity
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#  ignoreTenantTables:
-#    - "tourist"
+  ignoreTenantTables:
+    - "tourist"
